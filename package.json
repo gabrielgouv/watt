@@ -1,0 +1,16 @@
+{
+  "name": "watt",
+  "main": "watt.js",
+  "version": "0.1",
+  "dependencies": {
+    "node-simconnect": "^1.2.0",
+    "socket.io": "^2.1.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pkg watt.js --target node8-win-x86 --out-path ./build"
+  },
+  "author": "Joao Pedro Henrique <joao.pedro.hsd@gmail.com>",
+  "license": "MIT",
+  "description": "An opensource software for sending SimConnect data through WebSocket using Socket.io"
+}
