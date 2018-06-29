@@ -1,4 +1,6 @@
 # watt
+[logo]: https://i.imgur.com/4tJmY1F.jpg "Logo"
+Logo by [dee-y](https://github.com/dee-y)
 An opensource software for sending SimConnect data through WebSocket using Socket.io.
 
 ## How to
