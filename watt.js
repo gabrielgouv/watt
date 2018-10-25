@@ -2,15 +2,27 @@ var simConnect = require('./simconnect')
 var app = require('http').createServer()
 var io = require('socket.io')(app)
 
-// Try to connect to simulator
-connectToSim()
+const RECONNECTION_TIMEOUT = 5000;
+const SERVER_PORT = 5050;
 
-// Configures server
-app.listen(5050)
-io.on('connection', () => {
-    console.log('Conectado com sucesso ao Mach')
-    sendData()
-})
+initialize();
+
+function initialize() {
+    connectToSim();
+    configureServer();
+}
+
+function configureServer() {
+    app.listen(SERVER_PORT);
+    openSocketConnection();
+}
+
+function openSocketConnection() {
+    io.on('connection', () => {
+        console.log('Conectado com sucesso ao Mach');
+        sendData();
+    })
+}
 
 // Send data through WebSocket
 function sendData() {
@@ -27,12 +39,12 @@ function sendData() {
             altitude: data["PLANE ALTITUDE"],
             speed: data["GROUND VELOCITY"],
             heading: (180*data["PLANE HEADING DEGREES MAGNETIC"])/Math.PI,
-        })
+        });
     }, 
     simConnect.objectId.USER,
     simConnect.period.SECOND,
     simConnect.dataRequestFlag.CHANGED
-    )
+    );
 }
 
 // Open connection
@@ -41,16 +53,20 @@ function connectToSim() {
     var success = simConnect.open("Watt", (simName, scVersion) => console.log(`\nConnectado com sucesso ao: ${simName}. SimConnect version = ${scVersion}`), 
     () => {
         console.log("Simulador fechado pelo usuario");
-        connectToSim()
+        connectToSim();
     }, (exception) => {
         console.log("SimConnect exception: " + exception.name + " (" + exception.dwException + ", " + exception.dwSendID + ", " + exception.dwIndex + ", " + exception.cbData + ")");
     }, (error) => {
         console.log("SimConnect error: " + error);
         connectToSim();
-    })
+    });
     if(!success) {
-        setTimeout(() => {
-            connectToSim();
-        }, 5000);
+        reconnectToSim();
     }
+}
+
+function reconnectToSim() {
+    setTimeout(() => {
+        connectToSim();
+    }, RECONNECTION_TIMEOUT);
 }

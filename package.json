@@ -1,7 +1,7 @@
 {
   "name": "watt",
   "main": "watt.js",
-  "version": "0.1",
+  "version": "0.1.1",
   "dependencies": {
     "node-simconnect": "^1.2.0",
     "socket.io": "^2.1.1"
